@@ -16,7 +16,7 @@ struct CharacterListResponse: Codable {
 // MARK: - Info
 struct InfoResponse: Codable {
     let count, pages: Int
-    let next, prev: String
+    let next, prev: String?
 }
 
 // MARK: - Result

@@ -13,8 +13,8 @@ struct CharacterListBusinessModel {
     let results: [CharacterBusinessModel]
     
     init(response: CharacterListResponse) {
-        info = InfoBusinessModel(next: response.info.next,
-                                 prev: response.info.prev)
+        info = InfoBusinessModel(next: response.info.next ?? "",
+                                 prev: response.info.prev ?? "")
         results = response.results.map({ response in
             CharacterBusinessModel(response: response)
         })
