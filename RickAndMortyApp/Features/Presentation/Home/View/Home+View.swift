@@ -48,7 +48,6 @@ struct HomeView: View {
          }
     }
     
-
     var scrollDetectionView: some View {
         GeometryReader { proxy in
             let offset = proxy.frame(in: .named("scroll")).minY

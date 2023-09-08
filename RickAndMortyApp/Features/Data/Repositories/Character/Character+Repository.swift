@@ -19,9 +19,8 @@ class DefaultCharacterRepository: CharacterRepository {
     }
     
     func getCharacterList(pageNumber: String?) async throws -> CharacterListResponse {
-        let endpoint = RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.pagination)\(pageNumber ?? "1")"
-        
         do {
+            let endpoint = RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.pagination)\(pageNumber ?? "1")"
             return try await apiService.getDataFromGetRequest(from: endpoint)
         } catch {
             throw error

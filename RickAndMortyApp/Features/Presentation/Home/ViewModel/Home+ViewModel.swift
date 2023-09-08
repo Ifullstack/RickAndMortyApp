@@ -24,9 +24,9 @@ enum HomeViewError: Error {
     var characterList: [CharacterBusinessModel] = []
     var viewError: HomeViewError?
     var hasError: Bool = false
+    var isLoading: Bool = false
     
     private var currentPage: Int = 1
-    var isLoading: Bool = false
     
     init(useCase: CharacterUseCase = DefaultCharacterUseCase()) {
         self.useCase = useCase
