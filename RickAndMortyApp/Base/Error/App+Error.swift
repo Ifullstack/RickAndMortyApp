@@ -25,7 +25,7 @@ extension AppError {
             case .missingData:
                 return NSLocalizedString("APP-ERROR", comment: "Missing data error")
             case .unExpectedError:
-                return NSLocalizedString("APP-ERROR", comment: "Unexpected error")
+                return NSLocalizedString("APP-ERROR", comment: "Hubo un error inesperado, inténtalo más tarde")
             case .parseError:
                 return NSLocalizedString("APP-ERROR", comment: "Parse error")
         }

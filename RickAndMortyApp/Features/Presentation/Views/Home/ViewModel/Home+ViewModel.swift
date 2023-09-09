@@ -7,22 +7,11 @@
 import Foundation
 import Observation
 
-enum HomeViewError: Error {
-    case unExpectedError
-    
-    var errorDescription: String? {
-        switch self {
-            case .unExpectedError:
-                return NSLocalizedString("APP-ERROR", comment: "Hubo un error inesperado, inténtalo más tarde")
-        }
-    }
-}
-
 @Observable class HomeViewModel {
     private let useCase: CharacterUseCase
     
     var characterList: [CharacterBusinessModel] = []
-    var viewError: HomeViewError?
+    var viewError: AppError?
     var hasError: Bool = false
     var isLoading: Bool = false
     
@@ -45,8 +34,11 @@ enum HomeViewError: Error {
                 isLoading = false
             }
         } catch {
-            viewError = .unExpectedError
-            hasError = true
+            await MainActor.run {
+                isLoading = false
+                viewError = .unExpectedError
+                hasError = true
+            }
         }
     }
 }

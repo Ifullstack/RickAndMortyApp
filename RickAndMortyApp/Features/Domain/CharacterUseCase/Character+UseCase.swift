@@ -9,6 +9,7 @@ import Foundation
 
 protocol CharacterUseCase {
     func getCharacterList(pageNumber: String?) async throws -> CharacterListBusinessModel
+    func searchCharacter(by name: String, and pageNumber: String?) async throws -> CharacterListBusinessModel
 }
 
 class DefaultCharacterUseCase: CharacterUseCase {
@@ -21,6 +22,15 @@ class DefaultCharacterUseCase: CharacterUseCase {
     func getCharacterList(pageNumber: String?) async throws -> CharacterListBusinessModel {
         do {
             let response = try await repository.getCharacterList(pageNumber: pageNumber)
+            return CharacterListBusinessModel(response: response)
+        } catch {
+            throw error
+        }
+    }
+    
+    func searchCharacter(by name: String, and pageNumber: String?) async throws -> CharacterListBusinessModel {
+        do {
+            let response = try await repository.searchCharacter(by: name, and: pageNumber)
             return CharacterListBusinessModel(response: response)
         } catch {
             throw error

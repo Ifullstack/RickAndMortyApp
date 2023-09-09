@@ -9,6 +9,7 @@ import Foundation
 
 protocol CharacterRepository {
     func getCharacterList(pageNumber: String?) async throws -> CharacterListResponse
+    func searchCharacter(by name: String, and pageNumber: String?) async throws -> CharacterListResponse
 }
 
 class DefaultCharacterRepository: CharacterRepository {
@@ -24,6 +25,24 @@ class DefaultCharacterRepository: CharacterRepository {
             return try await apiService.getDataFromGetRequest(from: endpoint)
         } catch {
             throw error
+        }
+    }
+    
+    func searchCharacter(by name: String, and pageNumber: String?) async throws -> CharacterListResponse {
+        do {
+            return try await apiService.getDataFromGetRequest(from: getEndpointForPagination(by: name, and: pageNumber))
+        } catch {
+            throw error
+        }
+    }
+}
+
+extension DefaultCharacterRepository {
+    private func getEndpointForPagination(by name: String, and pageNumber: String?) -> String {
+        if let pageNumber {
+            return RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.name)\(name)" + "\(RemoteURL.searchPagination)\(pageNumber)"
+        } else {
+            return RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.name)\(name)"
         }
     }
 }

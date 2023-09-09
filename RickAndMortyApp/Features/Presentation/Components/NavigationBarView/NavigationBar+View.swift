@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct NavigationBarView: View {
-    var title = ""
+    var title: String = ""
+    
     @State var showSheet = false
     @Binding var contentHasScrolled: Bool
-    
     @EnvironmentObject var model: NavigationBarModel
-    @AppStorage("showAccount") var showAccount = false
-    @AppStorage("isLogged") var isLogged = false
     
     var body: some View {
         ZStack {
@@ -34,6 +32,25 @@ struct NavigationBarView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 24)
                 .opacity(contentHasScrolled ? 0.7 : 1)
+            
+            HStack(spacing: 16) {
+                Button {
+                    showSheet.toggle()
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(.secondary)
+                        .background(.ultraThinMaterial)
+                        .backgroundStyle(cornerRadius: 16, opacity: 0.4)
+                }
+                .sheet(isPresented: $showSheet) {
+                    SearchView(viewModel: SearchViewModel())
+                }
+                .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            .padding()
         }
         .offset(y: model.showNav ? 0 : -120)
         .accessibility(hidden: !model.showNav)

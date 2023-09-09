@@ -1,51 +1,20 @@
 //
-//  Home+View.swift
+//  HomeView+Components.swift
 //  RickAndMortyApp
 //
-//  Created by Cane Allesta on 6/9/23.
+//  Created by Cane Allesta on 9/9/23.
 //
 
 import SwiftUI
-import Observation
 
-struct HomeView: View {
-    @Bindable var viewModel: HomeViewModel
-    
-    @State var showStatusBar = true
-    @State var contentHasScrolled = false
-    @State var showNav = false
-    @State var showDetail: Bool = false
-    
-    var body: some View {
-        ZStack {
-            Color("Background").ignoresSafeArea()
-            
-            ScrollView() {
-                scrollDetectionView
-                characterListView
-                    .padding(.vertical, 70)
-                    .padding(.bottom, 50)
-            }.coordinateSpace(.named("scroll"))
-        }
-        .onChange(of: showDetail, {
-            withAnimation {
-                showNav.toggle()
-                showStatusBar.toggle()
-            }
-         })
-         .overlay(NavigationBarView(title: "Characters",
-                                    contentHasScrolled: $contentHasScrolled))
-         .statusBar(hidden: !showStatusBar)
-         .onAppear {
-             Task {
-                 await viewModel.loadCharacterList()
-             }
-         }
-         .alert(isPresented: $viewModel.hasError) {
-             Alert(title: Text("Important message"),
-                   message: Text(viewModel.viewError?.localizedDescription ?? "Unexpected error is happen"),
-                   dismissButton: .default(Text("Got it!")))
-         }
+extension HomeView {
+    var scrollView: some View {
+        ScrollView() {
+            scrollDetectionView
+            characterListView
+                .padding(.vertical, 70)
+                .padding(.bottom, 50)
+        }.coordinateSpace(.named("scroll"))
     }
     
     var scrollDetectionView: some View {
@@ -57,13 +26,11 @@ struct HomeView: View {
             withAnimation(.easeInOut) {
                 let estimatedContentHeight = CGFloat(viewModel.characterList.count * 100)
                 let threshold = 0.8 * estimatedContentHeight
-        
                 if value <= -threshold {
                     Task {
                         await viewModel.loadCharacterList()
                     }
                 }
-                
                 if value < 0 {
                     contentHasScrolled = true
                 } else {
@@ -95,9 +62,3 @@ struct HomeView: View {
         .padding(.horizontal, 20)
     }
 }
-
-
-
-
-
-
