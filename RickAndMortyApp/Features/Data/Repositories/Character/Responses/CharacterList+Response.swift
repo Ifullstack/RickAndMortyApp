@@ -10,7 +10,7 @@ import Foundation
 // MARK: - CharacterListResponse
 struct CharacterListResponse: Codable {
     let info: InfoResponse
-    let results: [CharacterResponse]
+    var results: [CharacterResponse]
 }
 
 // MARK: - Info

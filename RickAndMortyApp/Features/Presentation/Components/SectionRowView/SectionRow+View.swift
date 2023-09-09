@@ -12,18 +12,14 @@ struct SectionRowView: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            AsyncImage(url: URL(string: section.image)) { image in
-                image
-                    .resizable()
+            if let url = URL(string: section.image) {
+                AsyncImageView(url: url)
                     .frame(width: 40, height: 40)
                     .mask(Circle())
                     .padding(12)
                     .background(Color(UIColor.systemBackground).opacity(0.3))
                     .mask(Circle())
                     .overlay(CircularView(value: section.progress))
-            } placeholder: {
-                ProgressView()
-                    .accentColor(.white)
             }
 
             VStack(alignment: .leading, spacing: 8) {

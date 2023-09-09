@@ -20,9 +20,15 @@ class DefaultCharacterRepository: CharacterRepository {
     }
     
     func getCharacterList(pageNumber: String?) async throws -> CharacterListResponse {
+        if let cachedResponse = retreive(by: pageNumber ?? "1") {
+            return cachedResponse
+        }
+    
         do {
             let endpoint = RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.pagination)\(pageNumber ?? "1")"
-            return try await apiService.getDataFromGetRequest(from: endpoint)
+            let response: CharacterListResponse = try await apiService.getDataFromGetRequest(from: endpoint)
+            self.save(with: pageNumber ?? "1", response: response)
+            return response
         } catch {
             throw error
         }
@@ -34,6 +40,18 @@ class DefaultCharacterRepository: CharacterRepository {
         } catch {
             throw error
         }
+    }
+}
+
+extension DefaultCharacterRepository {
+    private func retreive(by pageNumber: String) -> CharacterListResponse? {
+        let cache = DefaultNSCacheStoreDatasource<String, CharacterListResponse>()
+        return cache[pageNumber]
+    }
+    
+    private func save(with pageNumber: String, response: CharacterListResponse) {
+        let cache = DefaultNSCacheStoreDatasource<String, CharacterListResponse>()
+        cache[pageNumber] = response
     }
 }
 

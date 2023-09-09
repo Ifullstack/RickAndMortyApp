@@ -43,7 +43,9 @@ import Combine
         isLoading = true
         await fetchSearchCharacter(by: name)
     }
-    
+}
+
+extension SearchViewModel {
     private func fetchSearchCharacter(by name: String) async {
         do {
             let response = try await useCase.searchCharacter(by: name, and: "\(currentPage)")
