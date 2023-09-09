@@ -17,7 +17,7 @@ class CharacterRepositoryTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        sut = DefaultCharacterRepository(apiService: CharacterListFakeApiServiceSuccess())
+        sut = DefaultCharacterRepository(apiService: CharacterListFakeApiServiceSuccess()) 
         sutFailure = DefaultCharacterRepository(apiService: CharacterListFakeApiServiceFailure())
     }
     
@@ -33,6 +33,15 @@ extension CharacterRepositoryTest {
     func testSuccessCase_getCharacterList() async {
         do {
             let response = try await sut?.getCharacterList(pageNumber: nil)
+            XCTAssertTrue(response?.results.first?.id == 21)
+        } catch {
+            XCTFail("Always receive a response and not throw an error")
+        }
+    }
+    
+    func testSuccessCase_SearchCharacter() async {
+        do {
+            let response = try await sut?.searchCharacter(by: "Rick", and: nil)
             XCTAssertTrue(response?.results.first?.id == 21)
         } catch {
             XCTFail("Always receive a response and not throw an error")
@@ -63,6 +72,15 @@ extension CharacterRepositoryTest {
             } else {
                 XCTFail("This test should throw an parse error")
             }
+        }
+    }
+    
+    func testFailureCase_SearchCharacter() async {
+        do {
+            let _ = try await sutFailure?.searchCharacter(by: "Rick", and: nil)
+            XCTFail("This test should throw an error")
+        } catch {
+            // Test passed
         }
     }
 }

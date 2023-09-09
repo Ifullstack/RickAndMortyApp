@@ -34,7 +34,8 @@ class DefaultCharacterRepository: CharacterRepository {
         }
     }
     
-    func searchCharacter(by name: String, and pageNumber: String?) async throws -> CharacterListResponse {
+    func searchCharacter(by name: String, 
+                         and pageNumber: String?) async throws -> CharacterListResponse {
         do {
             return try await apiService.getDataFromGetRequest(from: getEndpointForPagination(by: name, and: pageNumber))
         } catch {

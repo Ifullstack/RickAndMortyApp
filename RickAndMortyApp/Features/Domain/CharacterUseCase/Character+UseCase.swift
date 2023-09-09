@@ -28,7 +28,8 @@ class DefaultCharacterUseCase: CharacterUseCase {
         }
     }
     
-    func searchCharacter(by name: String, and pageNumber: String?) async throws -> CharacterListBusinessModel {
+    func searchCharacter(by name: String, 
+                         and pageNumber: String?) async throws -> CharacterListBusinessModel {
         do {
             let response = try await repository.searchCharacter(by: name, and: pageNumber)
             return CharacterListBusinessModel(response: response)
