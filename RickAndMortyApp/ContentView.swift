@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var model = NavigationBarModel()
+ 
     
     var body: some View {
         HomeView(viewModel: HomeViewModel())
             .environmentObject(model)
-        
     }
 }
 

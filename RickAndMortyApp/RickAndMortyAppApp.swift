@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct RickAndMortyAppApp: App {
+    @StateObject var router = Router()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack(path: $router.navStack) {
+                ContentView()
+            }.environmentObject(router)
         }
     }
 }

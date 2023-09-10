@@ -43,8 +43,11 @@ extension HomeView {
     var characterListView: some View {
         VStack(spacing: 16) {
             ForEach(Array(viewModel.characterList.enumerated()), id: \.offset) { index, businessModel in
-                SectionRowView(section: SectionRowModel(businessModel: businessModel))
-                  
+                SectionRowView(section: SectionRowModel(businessModel: businessModel)) 
+                    .onTapGesture {
+                        selectedCharacter = businessModel
+                        showDetail = true
+                    }
                 if index == viewModel.characterList.count - 1 {
                     Divider()
                     if viewModel.isLoading {

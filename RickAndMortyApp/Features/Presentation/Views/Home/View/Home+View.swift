@@ -9,12 +9,14 @@ import SwiftUI
 import Observation
 
 struct HomeView: View {
+    @EnvironmentObject var router: Router
     @Bindable var viewModel: HomeViewModel
     
     @State var showStatusBar = true
     @State var contentHasScrolled = false
     @State var showNav = false
     @State var showDetail: Bool = false
+    @State var selectedCharacter: CharacterBusinessModel?
     
     var body: some View {
         ZStack {
@@ -39,12 +41,8 @@ struct HomeView: View {
              Alert(title: Text("Important message"),
                    message: Text(viewModel.viewError?.localizedDescription ?? "Unexpected error is happen"),
                    dismissButton: .default(Text("Got it!")))
+         }.sheet(isPresented: $showDetail) {
+             CharacterDetailView(character: selectedCharacter)
          }
     }
 }
-
-
-
-
-
-

@@ -32,7 +32,7 @@ extension SearchView {
         .searchViewStyle()
         .coordinateSpace(.named("scrollview"))
         .sheet(isPresented: $showCourse) {
-          //  CourseView(namespace: namespace, course: $selectedCourse, isAnimated: false)
+            CharacterDetailView(character: selectedCharacter)
         }
     }
     

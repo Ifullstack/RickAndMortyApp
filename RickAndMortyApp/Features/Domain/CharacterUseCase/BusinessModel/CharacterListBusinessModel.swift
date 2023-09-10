@@ -44,6 +44,10 @@ struct CharacterBusinessModel {
     let url: String
     let created: String
     
+    var listOfEpisodes: String {
+        episodes.compactMap { URL(string: $0)?.lastPathComponent }.joined(separator: ", ")
+    }
+    
     init(response: CharacterResponse) {
         id = response.id
         name = response.name
