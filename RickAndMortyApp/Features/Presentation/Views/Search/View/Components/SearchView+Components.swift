@@ -17,7 +17,7 @@ extension SearchView {
                 }
                 
                 Button {
-                    showCourse = true
+                    showCharacterDetail = true
                     selectedCharacter = character
                 } label:  {
                     ListRow(title: character.name, image: character.image)
@@ -31,7 +31,7 @@ extension SearchView {
         }
         .searchViewStyle()
         .coordinateSpace(.named("scrollview"))
-        .sheet(isPresented: $showCourse) {
+        .sheet(isPresented: $showCharacterDetail) {
             CharacterDetailView(character: selectedCharacter)
         }
     }
@@ -47,7 +47,7 @@ extension SearchView {
                 let threshold = 0.4 * estimatedContentHeight
                 if value <= -threshold {
                     Task {
-                        await viewModel.searchMoreCharacters(by: text)
+                        await viewModel.searchCharacter(by: text, isFirstLoad: false)
                     }
                 }
             }

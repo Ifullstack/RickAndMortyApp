@@ -27,7 +27,7 @@ import Combine
     
     /// A work item for debouncing, if needed.
     var workItem: DispatchWorkItem?
-    
+        
     init(useCase: CharacterUseCase = DefaultCharacterUseCase()) {
         self.useCase = useCase
     }
@@ -35,35 +35,23 @@ import Combine
     /// Searches for characters based on the provided name.
     ///
     /// - Parameter name: The name of the character to search for.
-    func searchCharacter(by name: String) async {
+    func searchCharacter(by name: String, isFirstLoad: Bool) async {
         if name.isEmpty {
             resetSearch()
             return
         }
         guard !isLoading, canFetchMoreCharacters else { return }
         isLoading = true
-        currentPage = 1
-        characterList = []
-        await fetchSearchCharacter(by: name)
-    }
-    
-    /// Fetches more characters for an ongoing search.
-    ///
-    /// - Parameter name: The name of the character to search for.
-    func searchMoreCharacters(by name: String) async {
-        if name.isEmpty {
-            resetSearch()
-            return
+        if isFirstLoad {
+            currentPage = 1
+            characterList = []
         }
-        guard !isLoading, canFetchMoreCharacters else { return }
-        isLoading = true
         await fetchSearchCharacter(by: name)
     }
 }
 
 // MARK: - Private Methods
 extension SearchViewModel {
-    
     /// Internal method to fetch characters based on a name.
     ///
     /// - Parameter name: The name of the character to search for.

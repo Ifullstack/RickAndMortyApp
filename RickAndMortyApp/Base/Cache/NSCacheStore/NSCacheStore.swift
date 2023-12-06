@@ -2,78 +2,62 @@
 //  NSCacheStore.swift
 //  RickAndMortyApp
 //
-//  Created by Cane Allesta on 9/9/23.
+//  Created by Cane Allesta on 6/12/23.
 //
 
 import Foundation
 
-public protocol NSCacheStoreDatasource {
-    associatedtype Key: Hashable
-    associatedtype Value
-    
-    func save(_ value: Value, forKey key: Key)
-    func retrieve(forKey key: Key) -> Value?
-    func removeValue(forKey key: Key)
-    subscript(key: Key) -> Value? { get set }
-}
+// Global dictionary to hold NSCacheStore instances based on type names
+private var cacheManagerInstances: [String: Any] = [:]
+private let cacheManagerQueue = DispatchQueue(label: "com.trendier.cacheManagerQueue")
 
-public class DefaultNSCacheStoreDatasource <Key: Hashable, Value>: NSCacheStoreDatasource {
-    private let wrapped = NSCache<WrappedKey, Entry>()
+public class NSCacheStore<Key: Hashable, Value> {
+    
+    private var cache: DefaultNSCacheStoreDatasource<Key, Value>
+    
+    static public var shared: NSCacheStore<Key, Value> {
+        let typeName = "\(Key.self)-\(Value.self)"
+        if let cachedInstance = cacheManagerInstances[typeName] as? NSCacheStore<Key, Value> {
+            return cachedInstance
+        }
+        let newInstance = NSCacheStore<Key, Value>()
+        cacheManagerQueue.sync {
+            cacheManagerInstances[typeName] = newInstance
+        }
+        return newInstance
+    }
+
+    public init() {
+        self.cache = DefaultNSCacheStoreDatasource<Key, Value>()
+    }
     
     public func save(_ value: Value, forKey key: Key) {
-        let entry = Entry(value: value)
-        wrapped.setObject(entry, forKey: WrappedKey(key))
+        cache.save(value, forKey: key)
     }
     
     public func retrieve(forKey key: Key) -> Value? {
-        let entry = wrapped.object(forKey: WrappedKey(key))
-        return entry?.value
+        return cache.retrieve(forKey: key)
     }
     
     public func removeValue(forKey key: Key) {
-        wrapped.removeObject(forKey: WrappedKey(key))
+        cache.removeValue(forKey: key)
     }
-}
-
-private extension DefaultNSCacheStoreDatasource {
-    final class WrappedKey: NSObject {
-        let key: Key
-
-        init(_ key: Key) { self.key = key }
-
-        override var hash: Int { return key.hashValue }
-
-        override func isEqual(_ object: Any?) -> Bool {
-            guard let value = object as? WrappedKey else {
-                return false
-            }
-            return value.key == key
+    
+    public subscript(key: Key) -> Value? {
+        get {
+            return retrieve(forKey: key)
         }
-    }
-}
-
-private extension DefaultNSCacheStoreDatasource {
-    final class Entry {
-        let value: Value
-
-        init(value: Value) {
-            self.value = value
-        }
-    }
-}
-
-public extension DefaultNSCacheStoreDatasource {
-     subscript(key: Key) -> Value? {
-        get { return retrieve(forKey: key) }
         set {
-            guard let value = newValue else {
-                // If nil was assigned using our subscript,
-                // then we remove any value for that key:
+            if let value = newValue {
+                save(value, forKey: key)
+            } else {
                 removeValue(forKey: key)
-                return
             }
-            save(value, forKey: key)
         }
+    }
+    
+    public func clear() {
+        cacheManagerInstances = [:]
     }
 }
 

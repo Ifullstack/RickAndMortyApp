@@ -34,7 +34,7 @@ struct AsyncImageView: View {
     }
     
     private func downloadImage(url: URL) async throws -> UIImage {
-        let cache = DefaultNSCacheStoreDatasource<String, UIImage>()
+        let cache: NSCacheStore = NSCacheStore<String,UIImage>.shared
         
         // Check if the image is already cached
         if let cachedImage = cache[url.absoluteString] {
