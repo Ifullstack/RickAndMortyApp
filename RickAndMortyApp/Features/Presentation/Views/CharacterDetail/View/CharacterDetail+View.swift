@@ -12,7 +12,7 @@ struct CharacterDetailView: View {
 
     var character: CharacterBusinessModel?
     
-    var body: some View {
+    var body: some View { 
         ScrollView {
             imageView
             detailView

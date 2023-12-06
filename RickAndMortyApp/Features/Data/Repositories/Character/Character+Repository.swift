@@ -19,6 +19,7 @@ protocol CharacterRepository {
 class DefaultCharacterRepository: CharacterRepository {
     // ApiService instance used to make API requests.
     private let apiService: ApiService
+    private let cache: NSCacheStore = NSCacheStore<String,CharacterListResponse>.shared
     
     /// Initializes a new repository with an ApiService.
     init(apiService: ApiService = DefaultApiService()) {
@@ -61,13 +62,11 @@ class DefaultCharacterRepository: CharacterRepository {
 extension DefaultCharacterRepository {
     /// Retrieves cached data for a given page number.
     private func retreive(by pageNumber: String) -> CharacterListResponse? {
-        let cache = DefaultNSCacheStoreDatasource<String, CharacterListResponse>()
-        return cache[pageNumber]
+        cache[pageNumber]
     }
     
     /// Saves the data to cache for a given page number.
     private func save(with pageNumber: String, response: CharacterListResponse) {
-        let cache = DefaultNSCacheStoreDatasource<String, CharacterListResponse>()
         cache[pageNumber] = response
     }
 }

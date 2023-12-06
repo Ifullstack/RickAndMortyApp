@@ -11,7 +11,7 @@ import Foundation
 class CharacterListFakeApiServiceSuccess: ApiService {
     func getDataFromGetRequest<Response : Codable>(from url: String) async throws -> Response  {
         do {
-            let json = CharacterListFake.makeCharacterListJsonFake()
+            let json = CharacterListFake.makeCharacterListJsonFake() 
             let decodedData = try JSONDecoder().decode(Response.self, from: json)
             return decodedData
         } catch {

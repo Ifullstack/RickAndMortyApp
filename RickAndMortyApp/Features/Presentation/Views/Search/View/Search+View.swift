@@ -12,7 +12,7 @@ import Combine
 struct SearchView: View {
     @Bindable var viewModel: SearchViewModel
     @State var text = ""
-    @State var showCourse = false
+    @State var showCharacterDetail = false
     @State var selectedCharacter: CharacterBusinessModel?
     
     var body: some View {
@@ -39,7 +39,7 @@ extension SearchView {
         let task = DispatchWorkItem { [weak viewModel] in
             guard let viewModel else { return }
             Task {
-                await viewModel.searchCharacter(by: text)
+                await viewModel.searchCharacter(by: text, isFirstLoad: true)
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)

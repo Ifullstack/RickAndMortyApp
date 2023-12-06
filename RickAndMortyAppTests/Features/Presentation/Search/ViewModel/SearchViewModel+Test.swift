@@ -31,12 +31,7 @@ class SearchViewModelTest: XCTestCase {
 // MARK: - Success Tests
 extension SearchViewModelTest {
     func testSuccessCaseSearchCharacter() async {
-        await sut?.searchCharacter(by: "Rick")
-        XCTAssertTrue(sut?.characterList.first?.id == 21)
-    }
-    
-    func testSuccessCaseSearchMoreCharacter() async {
-        await sut?.searchMoreCharacters(by: "Rick")
+        await sut?.searchCharacter(by: "Rick", isFirstLoad: true)
         XCTAssertTrue(sut?.characterList.first?.id == 21)
     }
 }
@@ -45,13 +40,7 @@ extension SearchViewModelTest {
 extension SearchViewModelTest {
     func testFailureCase_loadCharacterList() async {
         guard let sutFailure else { return }
-        await sutFailure.searchCharacter(by: "Rick")
-        XCTAssertTrue(sutFailure.characterList.isEmpty)
-    }
-    
-    func testFailureCase_SearchMoreCharacter() async {
-        guard let sutFailure else { return }
-        await sutFailure.searchMoreCharacters(by: "Rick")
+        await sutFailure.searchCharacter(by: "Rick", isFirstLoad: true)
         XCTAssertTrue(sutFailure.characterList.isEmpty)
     }
 }
